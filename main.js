@@ -2,6 +2,13 @@ const container = document.querySelector('.container');
 const resizeButton = document.getElementById('resize');
 let gridSize = 16;
 
+function getRandomColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
 function createGrid() {
     // Clear existing grid
     container.innerHTML = '';
@@ -22,9 +29,23 @@ function createGrid() {
         square.style.width = `${squareSize}px`;
         square.style.height = `${squareSize}px`;
         
+        // Initialize opacity
+        square.dataset.opacity = '0';
+        
         // Add hover effect
         square.addEventListener('mouseover', () => {
-            square.style.backgroundColor = '#333';
+            const currentOpacity = parseFloat(square.dataset.opacity);
+            if (currentOpacity < 1) {
+                const newOpacity = Math.min(currentOpacity + 0.1, 1);
+                square.dataset.opacity = newOpacity;
+                
+                if (currentOpacity === 0) {
+                    // First interaction - set random color
+                    square.style.backgroundColor = getRandomColor();
+                }
+                
+                square.style.opacity = newOpacity;
+            }
         });
         
         container.appendChild(square);
