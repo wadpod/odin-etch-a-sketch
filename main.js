@@ -1,13 +1,29 @@
 const container = document.querySelector('.container');
 const resizeButton = document.getElementById('resize');
+const colorButtons = document.querySelectorAll('.color-btn');
 let gridSize = 16;
+let selectedColor = 'red'; // Default color
 
-function getRandomColor() {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
-}
+// Set up color selection
+colorButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        selectedColor = button.dataset.color;
+        // Update active state
+        colorButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Update all colored squares
+        const squares = document.querySelectorAll('.square');
+        squares.forEach(square => {
+            if (square.style.backgroundColor) {
+                square.style.backgroundColor = selectedColor;
+            }
+        });
+    });
+});
+
+// Set initial active color
+colorButtons[0].classList.add('active');
 
 function createGrid() {
     // Clear existing grid
@@ -40,8 +56,8 @@ function createGrid() {
                 square.dataset.opacity = newOpacity;
                 
                 if (currentOpacity === 0) {
-                    // First interaction - set random color
-                    square.style.backgroundColor = getRandomColor();
+                    // First interaction - set selected color
+                    square.style.backgroundColor = selectedColor;
                 }
                 
                 square.style.opacity = newOpacity;
